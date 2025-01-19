@@ -1,5 +1,5 @@
 
-========= BookMyDoc ==========
+<h1><b>BookMyDoc</b></h1>
 
 <h2>FrontEnd Server</h2>
 <ul>
