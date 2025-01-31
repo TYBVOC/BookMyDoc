@@ -1,14 +1,22 @@
 
-========= BookMyDoc ==========
+<h1><b>BookMyDoc</b></h1>
 
-FrontEnd Server
-    -Run in Terminal: npm run dev
+<h2>FrontEnd Server</h2>
+<ul>
+    <li><b>Run in Terminal:</b> npm run dev</li>
+</ul>
 
-Backend Server
-    -Run in Terminal: npm start
+<h2>Backend Server</h2>
+<ul>
+    <li><b>Run in Terminal:</b> npm install</li>
+    <li><b>Run in Terminal:</b> npm start</li>
+</ul>
 
-Admin Server
-    -Run in Terminal: npm run dev
+<h2>Admin Server</h2>
+<ul>
+    <li><b>Run in Terminal:</b> npm run dev</li>
+</ul>
+    
 
 
 
