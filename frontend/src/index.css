@@ -1,0 +1,15 @@
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+
+.arrow-icon {
+    width: 12px;
+    transition: transform 0.3s ease;
+  }
+  
+.arrow-icon:hover {
+    transform: rotate(60deg);
+}
