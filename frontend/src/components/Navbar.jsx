@@ -93,20 +93,20 @@ const Navbar = () => {
     >
       <Toolbar sx={{ justifyContent: 'space-between' }}>
         {/* Logo */}
-        {/* <Box 
+        <Box 
           component="img" 
-          src={assets.logo} 
+          src={assets.bookMyDoc} 
           alt="Logo" 
           sx={{ 
-            width: 176, 
+            width: 306, 
             cursor: 'pointer',
             [theme.breakpoints.down('sm')]: { width: 140 }
           }} 
           onClick={() => navigate('/')}
-        /> */}
-        <Typography color='black' sx={{fontSize: "2rem", fontWeight: "bold"}}>
+        />
+        {/* <Typography color='black' sx={{fontSize: "2rem", fontWeight: "bold"}}>
             BookMyDoc
-        </Typography>
+        </Typography> */}
 
         {/* Desktop Navigation */}
         <Box sx={{ display: { xs: 'none', md: 'flex' }, gap: 4, alignItems: 'center' }}>
