@@ -10,7 +10,7 @@ const Login = () => {
 
   const onSubmitHandler = (event) => {
     event.preventDefault();
-    // Just a placeholder for handling the form submission
+
     if (state === "Sign Up") {
       console.log("User registered:", { name, email, password });
     } else {
