@@ -36,7 +36,7 @@ const Navbar = () => {
           <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', p: 2 }}>
             <Box 
               component="img" 
-              src={assets.logo} 
+              // src={assets.logo} 
               alt="Logo" 
               sx={{ width: 140, cursor: 'pointer' }} 
               onClick={() => navigate('/')}
@@ -170,6 +170,39 @@ const Navbar = () => {
                   }
                 }}
               >
+                
+                  <MenuItem 
+                    key={"item.label"} 
+                    onClick={() => {
+                      handleMenuClose();
+                      navigate('/my-profile');
+                    }}
+                    sx={{
+                      py: 1.5,
+                      '&:hover': {
+                        backgroundColor: 'primary.light'
+                      }
+                    }}
+                  >
+                    {"My Profile"}
+                  </MenuItem>
+
+                  <MenuItem 
+                    key={"item.label"} 
+                    onClick={() => {
+                      handleMenuClose();
+                      navigate('/my-appointments');
+                    }}
+                    sx={{
+                      py: 1.5,
+                      '&:hover': {
+                        backgroundColor: 'primary.light'
+                      }
+                    }}
+                  >
+                    {"My Appointment"}
+                  </MenuItem>
+
                   <MenuItem 
                     key={"item.label"} 
                     onClick={() => {
@@ -185,6 +218,7 @@ const Navbar = () => {
                   >
                     {"Settings"}
                   </MenuItem>
+
               </Menu>
             </>
 
