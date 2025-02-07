@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Box, Button, Container, TextField, Typography, Paper, Link } from "@mui/material";
 
 const Login = () => {
-  const [state, setState] = useState("Sign Up");
+  const [state, setState] = useState("Login");
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   console.log("Login Component Loaded"); 
@@ -11,10 +11,10 @@ const Login = () => {
   const onSubmitHandler = (event) => {
     event.preventDefault();
 
-    if (state === "Sign Up") {
-      console.log("User registered:", { name, email, password });
-    } else {
+    if (state === "Login") {
       console.log("User logged in:", { email, password });
+    } else {
+      console.log("User registered:", { name, email, password });
     }
   };
 
@@ -22,14 +22,14 @@ const Login = () => {
     <Container maxWidth="sm">
       <Paper elevation={3} sx={{ p: 4, mt: 10, textAlign: "center", borderRadius: 2 }}>
         <Typography variant="h5" fontWeight="bold">
-          {state === "Sign Up" ? "Create Account" : "Login"}
+          {state === "Login" ? "Login" : "Create Account" }
         </Typography>
         <Typography variant="body2" sx={{ mb: 2 }}>
-          Please {state === "Sign Up" ? "sign up" : "log in"} to book an appointment.
+          Please {state === "Login" ?  "log in": "sign up"} to book an appointment.
         </Typography>
 
         <Box component="form" onSubmit={onSubmitHandler} sx={{ mt: 2 }}>
-          {state === "Sign Up" && (
+          {state !== "Login" && (
             <TextField
               fullWidth
               label="Full Name"
@@ -88,7 +88,7 @@ const Login = () => {
                 onClick={() => setState("Sign Up")}
                 sx={{ textDecoration: "underline" }}
               >
-                Sign Up
+                Create One
               </Link>
             </>
           )}
