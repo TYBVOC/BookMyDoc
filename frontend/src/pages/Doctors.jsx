@@ -50,7 +50,7 @@ const Doctors = () => {
 
         <List
           sx={{
-            display: { xs: showFilter ? 'flex' : 'none', md: 'flex' },
+            display: { xs: showFilter ? 'flex' : 'none', lg: 'flex' },
             flexDirection: 'column',
             gap: 1,
             width: { sm: 200 },

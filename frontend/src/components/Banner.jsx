@@ -5,7 +5,7 @@ import { assets } from '../assets/assets';
 
 const floatAnimation = keyframes`
   0% { transform: translateY(0px); }
-  50% { transform: translateY(-10px); }
+  50% { transform: translateY(-7px); }
   100% { transform: translateY(0px); }
 `;
 
@@ -93,7 +93,7 @@ const Banner = () => {
         </Grid2>
 
         {/* Right Side */}
-        <Grid2 item xs={12} md={6} sx={{marginLeft: "6rem", position: "relative", justifySelf: "flex-end", display: { xs: 'none', md: 'block' } }}>
+        <Grid2 item xs={12} md={6} sx={{ position: "relative", justifySelf: "flex-end", display: { xs: 'none', md: 'block' } }}>
           <Box
             sx={{
               position: 'relative',
@@ -120,7 +120,7 @@ const Banner = () => {
                 // bottom: 0,
                 // right: 0,
                 // height: '90%',
-                width: '30vw',
+                width: '25vw',
                 objectFit: "cover",
                 animation: {lg: `${floatAnimation} 6s ease-in-out infinite`},
                 filter: 'drop-shadow(0 20px 30px rgba(0,0,0,0.1))',
