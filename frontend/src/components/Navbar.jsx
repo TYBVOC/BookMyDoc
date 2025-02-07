@@ -36,7 +36,7 @@ const Navbar = () => {
           <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', p: 2 }}>
             <Box 
               component="img" 
-{/*               src={assets.logo}  */}
+              src={assets.logo} 
               alt="Logo" 
               sx={{ width: 140, cursor: 'pointer' }} 
               onClick={() => navigate('/')}
