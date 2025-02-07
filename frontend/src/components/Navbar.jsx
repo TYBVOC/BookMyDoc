@@ -78,6 +78,11 @@ const Navbar = () => {
         {path: "/contact", name: "Contact"},
     ]
 
+    const settings = [
+      {path: "/profile", name: "My profile"},
+      {path: "/appointments", name: "My Appointments"},
+      {path: "/logout", name: "Logout"},
+    ]
 
 
   return (
@@ -87,26 +92,25 @@ const Navbar = () => {
       sx={{ 
         backgroundColor: 'common.white', 
         borderBottom: `1px solid ${theme.palette.divider}`,
-        px: { xs: 3, md: 5, lg: 10 },
-        py: { xs: 3, md: 4, lg: 2 },
+        
       }}
     >
       <Toolbar sx={{ justifyContent: 'space-between' }}>
         {/* Logo */}
-        {/* <Box 
+        <Box 
           component="img" 
-          src={assets.logo} 
+          src={assets.bookMyDoc} 
           alt="Logo" 
           sx={{ 
-            width: 176, 
+            width: 306, 
             cursor: 'pointer',
             [theme.breakpoints.down('sm')]: { width: 140 }
           }} 
           onClick={() => navigate('/')}
-        /> */}
-        <Typography color='black' sx={{fontSize: "2rem", fontWeight: "bold"}}>
+        />
+        {/* <Typography color='black' sx={{fontSize: "2rem", fontWeight: "bold"}}>
             BookMyDoc
-        </Typography>
+        </Typography> */}
 
         {/* Desktop Navigation */}
         <Box sx={{ display: { xs: 'none', md: 'flex' }, gap: 4, alignItems: 'center' }}>
@@ -170,21 +174,25 @@ const Navbar = () => {
                   }
                 }}
               >
-                  <MenuItem 
-                    key={"item.label"} 
-                    onClick={() => {
-                      handleMenuClose();
-                      item.action();
-                    }}
-                    sx={{
-                      py: 1.5,
-                      '&:hover': {
-                        backgroundColor: 'primary.light'
-                      }
-                    }}
-                  >
-                    {"Settings"}
-                  </MenuItem>
+                {settings.map((setting)=>(
+                    <MenuItem 
+                      key={"item.label"} 
+                      onClick={() => {
+                        handleMenuClose();
+                        item.action();
+                      }}
+                      component={NavLink}
+                      to={setting.path}
+                      sx={{
+                        py: 1.5,
+                        '&:hover': {
+                          backgroundColor: 'primary.light'
+                        }
+                      }}
+                    >
+                      {setting.name}
+                    </MenuItem>
+                ))}
               </Menu>
             </>
 
