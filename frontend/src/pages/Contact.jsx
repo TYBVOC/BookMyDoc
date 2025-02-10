@@ -22,7 +22,7 @@ const ContactUs = () => {
         src={assets.contact_image}  
         alt="Doctor and patient"
         sx={{
-          width: { xs: '40%', md: '30%' },
+          width: { xs: '85%', md: '40%' },
           borderRadius: theme.shape.borderRadius,
         }}
       />
