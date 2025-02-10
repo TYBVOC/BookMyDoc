@@ -1,9 +1,93 @@
-import React from 'react'
+import React, { useState } from "react";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  Paper,
+  Button,
+  Typography,
+  Avatar,
+  Box,
+  IconButton,
+} from "@mui/material";
+import CancelIcon from "@mui/icons-material/Cancel";
 
-const AllAppointments = () => {
+const initialAppointments = [
+  { id: 1, patient: "Sam", age: "35", date: "6 Mar 2025, 08:30 PM", doctor: "Hema", fees: "₹222", status: "Pending" },
+  { id: 2, patient: "Rohit", age: "NaN", date: "6 Mar 2025, 03:30 PM", doctor: "Deepika", fees: "₹300", status: "Pending" },
+  { id: 3, patient: "jabez", age: "55", date: "3 Mar 2025, 10:30 AM", doctor: "Purva", fees: "₹499", status: "Completed" },
+  { id: 4, patient: "Tanay", age: "80", date: "18 Feb 2025, 10:00 AM", doctor: "Laxmi", fees: "₹150", status: "Cancelled" },
+];
+
+const AppointmentsTable = () => {
+  const [appointments, setAppointments] = useState(initialAppointments);
+
+  const handleCancel = (id) => {
+    setAppointments((prev) =>
+      prev.map((appointment) =>
+        appointment.id === id ? { ...appointment, status: "Cancelled" } : appointment
+      )
+    );
+  };
+
   return (
-    <div>AllAppointments</div>
-  )
-}
+    <Box sx={{ padding: 2 }}>
+      <Typography variant="h5" sx={{ marginBottom: 2, fontWeight: "bold" }}>
+        All Appointments
+      </Typography>
+      <TableContainer component={Paper} sx={{ overflowX: "auto" }}>
+        <Table>
+          <TableHead>
+            <TableRow>
+              <TableCell>#</TableCell>
+              <TableCell>Patient</TableCell>
+              <TableCell>Age</TableCell>
+              <TableCell>Date & Time</TableCell>
+              <TableCell>Doctor</TableCell>
+              <TableCell>Fees</TableCell>
+              <TableCell>Action</TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {appointments.map((appointment, index) => (
+              <TableRow key={appointment.id}>
+                <TableCell>{index + 1}</TableCell>
+                <TableCell>
+                  <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+                    <Avatar>{appointment.patient.charAt(0).toUpperCase()}</Avatar>
+                    {appointment.patient}
+                  </Box>
+                </TableCell>
+                <TableCell>{appointment.age}</TableCell>
+                <TableCell>{appointment.date}</TableCell>
+                <TableCell>
+                  <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+                    <Avatar>{appointment.doctor.charAt(0).toUpperCase()}</Avatar>
+                    {appointment.doctor}
+                  </Box>
+                </TableCell>
+                <TableCell>{appointment.fees}</TableCell>
+                <TableCell>
+                  {appointment.status === "Pending" ? (
+                    <IconButton color="error" onClick={() => handleCancel(appointment.id)}>
+                      <CancelIcon />
+                    </IconButton>
+                  ) : (
+                    <Typography color={appointment.status === "Completed" ? "green" : "red"}>
+                      {appointment.status}
+                    </Typography>
+                  )}
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </TableContainer>
+    </Box>
+  );
+};
 
-export default AllAppointments
+export default AppointmentsTable;
