@@ -14,6 +14,8 @@ import {
   IconButton,
 } from "@mui/material";
 import CancelIcon from "@mui/icons-material/Cancel";
+import CheckIcon from "@mui/icons-material/Check";
+
 
 const initialAppointments = [
   { id: 1, patient: "Sam", age: "35", date: "6 Mar 2025, 08:30 PM", doctor: "Hema", fees: "₹222", status: "Pending" },
@@ -71,15 +73,31 @@ const AppointmentsTable = () => {
                 </TableCell>
                 <TableCell>{appointment.fees}</TableCell>
                 <TableCell>
-                  {appointment.status === "Pending" ? (
-                    <IconButton color="error" onClick={() => handleCancel(appointment.id)}>
-                      <CancelIcon />
-                    </IconButton>
-                  ) : (
-                    <Typography color={appointment.status === "Completed" ? "green" : "red"}>
-                      {appointment.status}
+                {/* {item.cancelled ? (
+                    <Typography variant="body2" color="error" fontWeight="medium">
+                      Cancelled
                     </Typography>
-                  )}
+                    ) : item.isCompleted ? (
+                    <Typography
+                      variant="body2"
+                      color="success.main"
+                      fontWeight="medium"
+                    >
+                      Completed
+                    </Typography>
+                    ) : ( */}
+                    <Box display="flex">
+                      <IconButton 
+                        sx={{ width: 40, height: 40 }}
+                      >
+                        <CancelIcon sx={{color: "red"}} />
+                      </IconButton>
+                      <IconButton
+                        sx={{ width: 40, height: 40, color: "green" }}>
+                        <CheckIcon />
+                      </IconButton>
+                    </Box>
+               {/* )} */}
                 </TableCell>
               </TableRow>
             ))}

@@ -49,6 +49,30 @@ const Sidebar = () => {
         </ListItem>
 
       </List>
+
+      <List>
+        <ListItem disablePadding>
+          <ListItemButton component={Link} to="/doctor-dashboard">
+            <ListItemIcon><Dashboard /></ListItemIcon>
+            <ListItemText primary="Dashboard" />
+          </ListItemButton>
+        </ListItem>
+
+        <ListItem disablePadding>
+          <ListItemButton component={Link} to="/doctor-appointments">
+            <ListItemIcon><Event /></ListItemIcon>
+            <ListItemText primary="Appointments" />
+          </ListItemButton>
+        </ListItem>
+
+        <ListItem disablePadding>
+          <ListItemButton component={Link} to="/doctor-profile">
+            <ListItemIcon><People /></ListItemIcon>
+            <ListItemText primary="Profile" />
+          </ListItemButton>
+        </ListItem>
+
+      </List>
     </SidebarContainer>
   );
 };
