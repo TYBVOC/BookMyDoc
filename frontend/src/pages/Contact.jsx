@@ -48,11 +48,10 @@ const ContactUs = () => {
             54709 Willms Station, Suite 350, Washington, USA
           </Typography>
           <Typography variant="body2">Tel: (415) 555-0132</Typography>
-          <Typography variant="body2">Email: greatstackdev@gmail.com</Typography>
+          <Typography variant="body2">Email: bookmydoc@gmail.com</Typography>
         </Box>
         
         <Box>
-          <Typography variant="h6" fontWeight={600}>CAREERS AT PRESCRIPTO</Typography>
           <Typography variant="body2">
             Learn more about our teams and job openings.
           </Typography>

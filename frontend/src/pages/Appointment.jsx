@@ -51,7 +51,7 @@ const Appointment = () => {
 
           <Box display="flex" alignItems="center" gap={1} >
             <Typography variant="body1" color="text.secondary" sx={{fontSize: "1.5rem"}}>
-              B.Com - General Physician
+              MBBS - General Physician
             </Typography>
             <Button variant="outlined" size="small" sx={{ borderRadius: 16, fontSize: "0.75rem" }}>
               2 Years
@@ -68,7 +68,7 @@ const Appointment = () => {
           </Box>
 
           <Typography variant="body1" color="text.primary" mt={2} sx={{fontWeight: 600}}>
-            Appointment Fee: <Typography sx={{fontWeight: 600}}  component="span">₹122</Typography>
+            Appointment Fee: <Typography sx={{fontWeight: 600}}  component="span">₹722</Typography>
           </Typography>
         </Box>
       </Grid2>
