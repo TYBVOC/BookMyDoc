@@ -13,11 +13,11 @@ const MyProfile = () => {
   const { token, backendUrl, userData, setUserData, loadUserProfileData } = useContext(AppContext);
 
   const handleImageChange = (e) => {
-    const file = e.target.files[0]; // Get the selected file
+    const file = e.target.files[0]; 
     console.log(file);
 
     if (file) {
-      setImage(file); // Store the selected image in state
+      setImage(file); 
     }
   };
 
@@ -192,18 +192,16 @@ const MyProfile = () => {
             Birthday: {userData.dob}
           </Typography>
         )}
-        {/* Use Below code only when you have a backend  */}
-        {/* <Button
+        <Button
             variant='contained'
             color='primary'
             sx={{ mt: 3, width: '100%' }}
             onClick={isEdit ? updateUserProfileData : () => setIsEdit(true)}
         >
             {isEdit ? 'Save Information' : 'Edit'}
-        </Button> */}
+        </Button>
 
-        {/* Below Code just to make the save button work only for frontend  */}
-        <Button
+        {/* <Button
           variant="contained"
           color="primary"
           sx={{ mt: 3, width: "100%" }}
@@ -224,10 +222,8 @@ const MyProfile = () => {
                 return;
               }
 
-              // Simulate saving action (remove backend call for now)
-              console.log("Saved Data:", userData);
+              // console.log("Saved Data:", userData);
 
-              // Toggle edit mode off only if validation passes
               setIsEdit(false);
             } else {
               setIsEdit(true);
@@ -235,7 +231,7 @@ const MyProfile = () => {
           }}
         >
           {isEdit ? 'Save Information' : 'Edit'}
-        </Button>
+        </Button> */}
 
       </CardContent>
     </Card>

@@ -4,11 +4,15 @@ import { Box, Typography, Grid, Button, useTheme, Grid2 } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import DoctorCard from "./doctor/DoctorCard"
 import { doctors } from '../assets/assets';
+import { useContext } from 'react';
+import { AppContext } from '../context/AppContext';
 
 const TopDoctors = () => {
 
     const theme = useTheme()
     const navigate = useNavigate()
+
+    const { doctors } = useContext(AppContext)
 
     // const doctors = [
     //     {
@@ -81,7 +85,7 @@ const TopDoctors = () => {
           alignItems: "center",
           justifyContent: "center"
         }}>
-        {doctors.slice(0, 3).map((doctor, i)=>(
+        {doctors?.slice(0, 3).map((doctor, i)=>(
             <DoctorCard key={doctor._id} item={doctor}/>
         ))}
        

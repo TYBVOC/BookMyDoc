@@ -1,8 +1,10 @@
-import React from "react";
+import React, { useContext } from "react";
 import { Box, List, ListItem, ListItemButton, ListItemIcon, ListItemText } from "@mui/material";
 import { Dashboard, Event, PersonAdd, People, Logout } from "@mui/icons-material";
 import { styled } from "@mui/material/styles";
 import { Link } from "react-router-dom";
+import { DoctorContext } from "../context/DoctorContext";
+import { AdminContext } from "../context/AdminContext";
 
 const SidebarContainer = styled(Box)(({ theme }) => ({
   width: "250px",
@@ -17,62 +19,70 @@ const SidebarContainer = styled(Box)(({ theme }) => ({
 }));
 
 const Sidebar = () => {
+
+  const { dToken } = useContext(DoctorContext)
+  const { aToken } = useContext(AdminContext)
+
   return (
     <SidebarContainer>
-      <List>
-        <ListItem disablePadding>
-          <ListItemButton component={Link} to="/admin-dashboard">
-            <ListItemIcon><Dashboard /></ListItemIcon>
-            <ListItemText primary="Dashboard" />
-          </ListItemButton>
-        </ListItem>
+      {aToken && (
+        <List>
+          <ListItem disablePadding>
+            <ListItemButton component={Link} to="/admin-dashboard">
+              <ListItemIcon><Dashboard /></ListItemIcon>
+              <ListItemText primary="Dashboard" />
+            </ListItemButton>
+          </ListItem>
 
-        <ListItem disablePadding>
-          <ListItemButton component={Link} to="/all-appointments">
-            <ListItemIcon><Event /></ListItemIcon>
-            <ListItemText primary="Appointments" />
-          </ListItemButton>
-        </ListItem>
+          <ListItem disablePadding>
+            <ListItemButton component={Link} to="/all-appointments">
+              <ListItemIcon><Event /></ListItemIcon>
+              <ListItemText primary="Appointments" />
+            </ListItemButton>
+          </ListItem>
 
-        <ListItem disablePadding>
-          <ListItemButton component={Link} to="/add-doctor">
-            <ListItemIcon><PersonAdd /></ListItemIcon>
-            <ListItemText primary="Add Doctor" />
-          </ListItemButton>
-        </ListItem>
+          <ListItem disablePadding>
+            <ListItemButton component={Link} to="/add-doctor">
+              <ListItemIcon><PersonAdd /></ListItemIcon>
+              <ListItemText primary="Add Doctor" />
+            </ListItemButton>
+          </ListItem>
 
-        <ListItem disablePadding>
-          <ListItemButton component={Link} to="/doctors-list">
-            <ListItemIcon><People /></ListItemIcon>
-            <ListItemText primary="Doctors List" />
-          </ListItemButton>
-        </ListItem>
+          <ListItem disablePadding>
+            <ListItemButton component={Link} to="/doctors-list">
+              <ListItemIcon><People /></ListItemIcon>
+              <ListItemText primary="Doctors List" />
+            </ListItemButton>
+          </ListItem>
 
-      </List>
+        </List>
+      )}
 
-      <List>
-        <ListItem disablePadding>
-          <ListItemButton component={Link} to="/doctor-dashboard">
-            <ListItemIcon><Dashboard /></ListItemIcon>
-            <ListItemText primary="Dashboard" />
-          </ListItemButton>
-        </ListItem>
+      {dToken && (
+        <List>
+          <ListItem disablePadding>
+            <ListItemButton component={Link} to="/doctor-dashboard">
+              <ListItemIcon><Dashboard /></ListItemIcon>
+              <ListItemText primary="Dashboard" />
+            </ListItemButton>
+          </ListItem>
 
-        <ListItem disablePadding>
-          <ListItemButton component={Link} to="/doctor-appointments">
-            <ListItemIcon><Event /></ListItemIcon>
-            <ListItemText primary="Appointments" />
-          </ListItemButton>
-        </ListItem>
+          <ListItem disablePadding>
+            <ListItemButton component={Link} to="/doctor-appointments">
+              <ListItemIcon><Event /></ListItemIcon>
+              <ListItemText primary="Appointments" />
+            </ListItemButton>
+          </ListItem>
 
-        <ListItem disablePadding>
-          <ListItemButton component={Link} to="/doctor-profile">
-            <ListItemIcon><People /></ListItemIcon>
-            <ListItemText primary="Profile" />
-          </ListItemButton>
-        </ListItem>
-
-      </List>
+          <ListItem disablePadding>
+            <ListItemButton component={Link} to="/doctor-profile">
+              <ListItemIcon><People /></ListItemIcon>
+              <ListItemText primary="Profile" />
+            </ListItemButton>
+          </ListItem>
+        </List>
+      )}
+      
     </SidebarContainer>
   );
 };

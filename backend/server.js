@@ -23,7 +23,7 @@ app.use("/api/doctor", doctorRouter)
 
 // Server program
 app.listen(process.env.PORT || 3000, ()=>{
-    console.log("Backend Server is Listening.....");
+    console.log("Backend Server is Listening....."+ process.env.PORT);
 })
 
 

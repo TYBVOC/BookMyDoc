@@ -1,22 +1,59 @@
-import React, { useState } from "react";
+import React, { useContext, useState, useEffect } from "react";
 import { Box, Button, Container, TextField, Typography, Paper, Link } from "@mui/material";
+import axios from "axios";
+import { AppContext } from "../context/AppContext";
+import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
 
 const Login = () => {
+  const { backendUrl, token, setToken } = useContext(AppContext)
   const [state, setState] = useState("Login");
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
-  console.log("Login Component Loaded"); 
   const [password, setPassword] = useState("");
+  const navigate = useNavigate()
 
-  const onSubmitHandler = (event) => {
+  
+
+
+  const onSubmitHandler = async (event) => {
     event.preventDefault();
 
-    if (state === "Login") {
-      console.log("User logged in:", { email, password });
+    if (state === "Sign Up") {
+      
+      const {data} = await axios.post(backendUrl+"/api/user/register", {name, email, password})
+      
+      if(data.success){
+        toast.success("Registered Successfully!!")
+        localStorage.setItem("token", data.token)
+        setToken(data.token)
+        navigate("/")
+      }else{
+        toast.error(data.message)
+      }
+
     } else {
-      console.log("User registered:", { name, email, password });
+      const {data} = await axios.post(backendUrl+"/api/user/login", {email, password})
+      
+      if(data.success){
+        toast.success("LoggedIn Successfully!!")
+        localStorage.setItem("token", data.token)
+        setToken(data.token)
+        navigate("/")
+      }else{
+        toast.error(data.message)
+      }
     }
   };
+
+  
+  
+
+  // useEffect(() => {
+  //   if (token) {
+  //     navigate('/')
+  //   }
+  // }, [token])
 
   return (
     <Container maxWidth="sm">

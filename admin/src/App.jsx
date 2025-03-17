@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext } from "react";
 import { Box, styled } from "@mui/material";
 import { ToastContainer } from "react-toastify";
 import { Routes, Route } from "react-router-dom";
@@ -12,6 +12,8 @@ import DoctorDashboard from "./pages/Doctor/DoctorDashboard";
 import DoctorAppointments from "./pages/Doctor/DoctorAppointments";
 import DoctorProfile from "./pages/Doctor/DoctorProfile";
 import Login from "./pages/Login";
+import { DoctorContext } from "./context/DoctorContext";
+import { AdminContext } from "./context/AdminContext";
 
 const MainContainer = styled(Box)(({ theme }) => ({
   display: "flex",
@@ -27,20 +29,23 @@ const ContentContainer = styled(Box)(({ theme }) => ({
 const App = () => {
   const login = true;
 
-  return login ? (
+  const { dToken } = useContext(DoctorContext)
+  const { aToken } = useContext(AdminContext)
+
+  return dToken || aToken ? (
     <>
+      <ToastContainer/>
       <Navbar />
       <MainContainer>
         <ContentContainer>
-          <ToastContainer />
-        <SideBar />
+          <SideBar />
           <Routes>
-            <Route path="/" element={<Dashboard />} />
-            <Route path="/admin-dashboard" element={<Dashboard />} />
-            <Route path="/all-appointments" element={<AllAppointments />} />
-            <Route path="/add-doctor" element={<AddDoctor />} />
+            <Route path="/" element={<Dashboard />} /> {/* Done */}
+            <Route path="/admin-dashboard" element={<Dashboard />} /> {/* Done */}
+            <Route path="/all-appointments" element={<AllAppointments />} /> {/* Done */}
+            <Route path="/add-doctor" element={<AddDoctor />} /> {/* Done */}
             
-            <Route path="/doctors-list" element={<DoctorsList />} />
+            <Route path="/doctors-list" element={<DoctorsList />} />{/* Done */}
             <Route path="/doctor-dashboard" element={<DoctorDashboard />} />
             <Route path="/doctor-appointments" element={<DoctorAppointments />} />
             <Route path="/doctor-profile" element={<DoctorProfile />} />
@@ -49,7 +54,10 @@ const App = () => {
       </MainContainer>
     </>
   ) : (
-    <Login />
+    <>
+      <ToastContainer/>
+      <Login />
+    </>
   );
 };
 

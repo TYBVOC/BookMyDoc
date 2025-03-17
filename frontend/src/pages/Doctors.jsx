@@ -1,9 +1,10 @@
-import React, { useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { Box, Typography, Button, Grid, List, ListItem, useTheme, useMediaQuery } from '@mui/material';
 import FilterListIcon from '@mui/icons-material/FilterList';
 import { useNavigate, useParams } from 'react-router-dom';
 import { doctors as filterDoc } from '../assets/assets';
 import DoctorCard from '../components/doctor/DoctorCard';
+import { AppContext } from '../context/AppContext';
 
 const Doctors = () => {
   const { speciality } = useParams();
@@ -11,6 +12,8 @@ const Doctors = () => {
   const navigate = useNavigate();
   const isMobile = useMediaQuery(theme.breakpoints.down('lg'));
   const [showFilter, setShowFilter] = useState(false);
+  const [filterDoc, setFilterDoc] = useState([])
+  const { doctors } = useContext(AppContext)
 
   const specialities = [
     'General physician',
@@ -20,6 +23,21 @@ const Doctors = () => {
     'Neurologist',
     'Gastroenterologist'
   ];
+
+  const applyFilter = () => {
+    if (speciality) {
+      setFilterDoc(doctors.filter(doc => doc.speciality === speciality))
+    } else {
+      setFilterDoc(doctors)
+    }
+  }
+
+
+  useEffect(() => {
+    applyFilter()
+  }, [doctors, speciality])
+  
+  
 
   return (
     <Box sx={{ px: { xs: 2, sm: 3 } }}>

@@ -33,7 +33,7 @@ const DoctorCard = ({item}) => {
           sx={{backgroundSize: "cover", objectFit: "cover"}}
           component="img"
           height="100%"
-          image={`..${item.image}`}
+          image={item.image}
           alt="green iguana"
         />
         <CardContent sx={{textAlign: "left"}}>
@@ -42,8 +42,8 @@ const DoctorCard = ({item}) => {
               {item.name}
             </Typography>
             <Box sx={{display: "flex", alignItems: "center", gap: 1}}>
-              <Box sx={{width: 10, height: 10, backgroundColor: "green", borderRadius: "50%"}}></Box>
-              <Typography  variant="span" sx={{fontWeight: 600}}>Available</Typography>
+              <Box sx={{width: 10, height: 10, backgroundColor: `${item.available ? "green": "red"}`, borderRadius: "50%"}}></Box>
+              <Typography  variant="span" sx={{fontWeight: 600}}>{item.available ? 'Available' : "Not Available"}</Typography>
             </Box>
           </Box>
           <Typography variant='span' sx={{fontSize: 13, marginY: "4px", display: "inline-block", fontWeight: 600, color: "white", backgroundColor: "#1976D2", padding: "5px 10px", borderRadius: "20px"}}>{item.speciality}</Typography>

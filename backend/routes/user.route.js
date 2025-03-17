@@ -8,11 +8,11 @@ const router = Router()
 
 router.post("/register", registerUser)
 router.post("/login", loginUser)
-router.get("/get-profile", getProfile)
+router.get("/get-profile",authUser, getProfile)
 // router.get("/get-profile", getProfile)
 router.post("/update-profile", upload.single('image'),authUser,  updateProfile)
-router.post("/book-appointment", bookAppointment)
-router.get("/appointments", listAppointment)
-router.post("/cancel-appointment", cancelAppointment)
+router.post("/book-appointment",authUser, bookAppointment)
+router.get("/appointments", authUser,listAppointment)
+router.post("/cancel-appointment", authUser, cancelAppointment)
 
 export default router;

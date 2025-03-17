@@ -1,6 +1,8 @@
 import validator from "validator";
 import mongoose from "mongoose";
 import userModel from "../models/userModel.js";
+import doctorModel from "../models/doctorModel.js"
+import appointmentModel from "../models/appointmentModel.js"
 import bcrypt from "bcrypt"
 import jwt from "jsonwebtoken"
 import { v2 as cloudinary } from 'cloudinary'
@@ -109,8 +111,19 @@ const updateProfile = async (req, res)=>{
             dob: dob,
             gender: gender
         })
+        
+        const ExistingImage = await userModel.findById(userId)
+
+        console.log(ExistingImage);
+        
 
         if(imageFile){
+
+            const publicURL = ExistingImage.image.split("/")[7]
+            const finalPublicId = publicURL.split(".")[0]
+
+            await cloudinary.uploader.destroy(finalPublicId);
+
             const imageUpload = await cloudinary.uploader.upload(imageFile.path, {resource_type: "image"})
             const imageUrl = imageUpload.secure_url;
             await userModel.findByIdAndUpdate(userId, {image: imageUrl})

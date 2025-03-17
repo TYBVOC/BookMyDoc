@@ -1,11 +1,16 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { Box, Typography, Grid, Button, Card, CardContent, CardMedia } from '@mui/material';
 import { Divider } from "@mui/material";
+import { AppContext } from '../context/AppContext';
+import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
+import { toast } from 'react-toastify';
 
 const MyAppointments = () => {
   const [appointments, setAppointments] = useState([]);
   const [payment, setPayment] = useState('');
-  const [loading, setLoading] = useState(true);
+  const { backendUrl, token } = useContext(AppContext)
+  const navigate = useNavigate()
 
   const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 
@@ -16,51 +21,37 @@ const MyAppointments = () => {
 
   //  fetching appointments with dummy data
   const getUserAppointments = async () => {
-    setLoading(true);
-    setTimeout(() => {
-      const dummyAppointments = [
-        {
-          _id: "1",
-          docData: {
-            name: "Dr. John Doe",
-            speciality: "Cardiologist",
-            address: { line1: "123 Main St", line2: "City, Country" },
-            image: "./src/assets/doc3.png"
-          },
-          slotDate: "2025_02_06",
-          slotTime: "10:00 AM",
-          cancelled: false,
-          payment: false,
-          isCompleted: false
-        },
-        {
-          _id: "2",
-          docData: {
-            name: "Dr. Jane Smith",
-            speciality: "Dermatologist",
-            address: { line1: "456 Elm St", line2: "City, Country" },
-            image: "./src/assets/doc1.png"
-          },
-          slotDate: "2025_02_10",
-          slotTime: "2:00 PM",
-          cancelled: false,
-          payment: false,
-          isCompleted: false
-        }
-        
-      ];
-      setAppointments(dummyAppointments.reverse());
-      setLoading(false);
-    }, 2000); // Simulate API call delay
+    try {
+      const { data } = await axios.get(backendUrl + '/api/user/appointments', { headers: { token } })
+      setAppointments(data.appointments.reverse())
+    } catch (error) {
+        console.log(error)
+        toast.error(error.message)
+    }
   };
 
-  useEffect(() => {
-    getUserAppointments();
-  }, []);
+  const cancelAppointment = async (appointmentId) => {
+    try {
 
-  if (loading) {
-    return <Typography variant="h6" ml={5}>Loading...</Typography>;
+        const { data } = await axios.post(backendUrl + '/api/user/cancel-appointment', { appointmentId }, { headers: { token } })
+
+        if (data.success) {
+            toast.success(data.message)
+            getUserAppointments()
+        } else {
+            toast.error(data.message)
+        }
+    } catch (error) {
+        console.log(error)
+        toast.error(error.message)
+    }
   }
+
+  useEffect(() => {
+    if (token) {
+      getUserAppointments()
+    }
+  }, [token]);
 
   return (
     <Box ml={12} mt={5}>
@@ -116,7 +107,7 @@ const MyAppointments = () => {
                       </Button>
                     )}
                     {!item.cancelled && !item.isCompleted && (
-                      <Button variant="outlined" color="error">
+                      <Button onClick={()=>cancelAppointment(item._id)} variant="outlined" color="error">
                         Cancel Appointment
                       </Button>
                     )}

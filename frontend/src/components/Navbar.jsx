@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import { 
     AppBar, 
     Toolbar, 
@@ -19,6 +19,7 @@ import { useState } from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
 import CloseIcon from '@mui/icons-material/Close';
 import {assets} from "../assets/assets.js"
+import { AppContext } from '../context/AppContext.jsx';
 
 
 const Navbar = () => {
@@ -30,6 +31,17 @@ const Navbar = () => {
     const handleMenuOpen = (event) => setAnchorEl(event.currentTarget);
     const handleMenuClose = () => setAnchorEl(null);
     const handleDrawerToggle = () => setMobileOpen(!mobileOpen);
+
+    const { token, setToken, userData } = useContext(AppContext)
+
+    const logout = () => {
+      localStorage.removeItem('token')
+      setToken(false)
+      navigate('/login')
+    }
+
+    // console.log(userData);
+    
 
     const drawerContent = (
         <Box sx={{ width: 250 }}>
@@ -82,7 +94,7 @@ const Navbar = () => {
       {path: "/my-profile", name: "My profile"},
       {path: "/my-appointments", name: "My Appointments"},
       {path: "/logout", name: "Logout"},
-    ]
+    ]    
 
 
   return (
@@ -115,8 +127,8 @@ const Navbar = () => {
         {/* Desktop Navigation */}
         <Box sx={{ display: { xs: 'none', md: 'flex' }, gap: 4, alignItems: 'center' }}>
             
-            {NavLinkList.map((navlink)=>(
-                <Button
+            {NavLinkList.map((navlink, i)=>(
+                <Button key={i}
                 component={NavLink}
                 to={navlink.path}
                 sx={{
@@ -148,55 +160,64 @@ const Navbar = () => {
         {/* User Section */}
         <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
 
-            <>
-              <IconButton onClick={handleMenuOpen} sx={{ p: 0 }}>
-                <Box
-                  component="img"
-                //   src={userData.image}
-                  alt="Profile"
-                  sx={{ 
-                    width: 40, 
-                    height: 40, 
-                    borderRadius: '50%',
-                    border: `2px solid ${theme.palette.primary.main}`
+            {token && userData ? (
+              <div>
+                <IconButton onClick={handleMenuOpen} sx={{ p: 0 }}>
+                  <Box
+                    component="img"
+                    src={userData.image}
+                    alt="Profile"
+                    sx={{ 
+                      width: 40, 
+                      height: 40, 
+                      borderRadius: '50%',
+                      border: `2px solid ${theme.palette.primary.main}`
+                    }}
+                  />
+                </IconButton>
+                <Menu
+                  anchorEl={anchorEl}
+                  open={Boolean(anchorEl)}
+                  onClose={handleMenuClose}
+                  PaperProps={{
+                    sx: {
+                      minWidth: 200,
+                      boxShadow: theme.shadows[3],
+                      mt: 1.5
+                    }
                   }}
-                />
-              </IconButton>
-              <Menu
-                anchorEl={anchorEl}
-                open={Boolean(anchorEl)}
-                onClose={handleMenuClose}
-                PaperProps={{
-                  sx: {
-                    minWidth: 200,
-                    boxShadow: theme.shadows[3],
-                    mt: 1.5
-                  }
-                }}
-              >
-                {settings.map((setting)=>(
-                    <MenuItem 
-                      key={"item.label"} 
-                      onClick={() => {
-                        handleMenuClose();
-                        item.action();
-                      }}
-                      component={NavLink}
-                      to={setting.path}
-                      sx={{
-                        py: 1.5,
-                        '&:hover': {
-                          backgroundColor: 'primary.light'
-                        }
-                      }}
-                    >
-                      {setting.name}
-                    </MenuItem>
-                ))}
-              </Menu>
-            </>
+                >
+                  {settings.map((setting, i)=>(
+                      <MenuItem 
+                        key={i} 
+                        
+                        onClick={() => {
+                          if(setting.name === "Logout"){
+                            logout()
+                            handleMenuClose();
+                          }else{
+                            handleMenuClose();
+                            item.action();
+                          }
+                        }}
+                        component={NavLink}
+                        to={setting.path}
+                        sx={{
+                          py: 1.5,
+                          '&:hover': {
+                            backgroundColor: 'primary.light'
+                          }
+                        }}
+                      >
+                        {setting.name}
+                      </MenuItem>
+                      
+                  ))}
+                </Menu>
+              </div>
 
-            <Button
+            ): (
+              <Button
               variant="contained"
               onClick={() => navigate('/login')}
               sx={{
@@ -210,6 +231,9 @@ const Navbar = () => {
             >
               Login
             </Button>
+            )}
+
+            
 
           {/* Mobile Menu Button */}
           <IconButton

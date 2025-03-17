@@ -1,6 +1,9 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import { Box, Button, Typography, useTheme } from '@mui/material';
 import { styled } from '@mui/material/styles';
+import { DoctorContext } from '../context/DoctorContext';
+import { AdminContext } from '../context/AdminContext';
+import { useNavigate } from 'react-router-dom';
 
 const HeaderContainer = styled(Box)(({ theme }) => ({
   display: 'flex',
@@ -46,7 +49,18 @@ const LogoutButton = styled(Button)(({ theme }) => ({
 const Navbar = () => {
   const theme = useTheme()
 
-  const aToken = true;
+  const { dToken, setDToken } = useContext(DoctorContext)
+  const { aToken, setAToken } = useContext(AdminContext)
+
+  const navigate = useNavigate()
+  
+  const logout = () => {
+    navigate('/')
+    dToken && setDToken('')
+    dToken && localStorage.removeItem('dToken')
+    aToken && setAToken('')
+    aToken && localStorage.removeItem('aToken')
+  }
 
   return (
     <HeaderContainer>
@@ -57,7 +71,8 @@ const Navbar = () => {
           </RoleBadge>
         </Box>
         <LogoutButton 
-          variant="contained" 
+          variant="contained"
+          onClick={() => logout()} 
           sx={{
             px: [2, 4],
             py: 1

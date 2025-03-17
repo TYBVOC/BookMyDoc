@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import {
   Table,
   TableBody,
@@ -15,6 +15,8 @@ import {
 } from "@mui/material";
 import CancelIcon from "@mui/icons-material/Cancel";
 import CheckIcon from '@mui/icons-material/Check';
+import { AppContext } from "../../context/AppContext";
+import { DoctorContext } from "../../context/DoctorContext";
 
 const initialAppointments = [
   {
@@ -68,17 +70,27 @@ const initialAppointments = [
 ];
 
 const DoctorAppointments = () => {
-  const [appointments, setAppointments] = useState(initialAppointments);
+  // const [appointments, setAppointments] = useState(initialAppointments);
 
-  const handleCancel = (id) => {
-    setAppointments((prev) =>
-      prev.map((appointment) =>
-        appointment.id === id
-          ? { ...appointment, status: "Cancelled" }
-          : appointment
-      )
-    );
-  };
+  // const handleCancel = (id) => {
+  //   setAppointments((prev) =>
+  //     prev.map((appointment) =>
+  //       appointment.id === id
+  //         ? { ...appointment, status: "Cancelled" }
+  //         : appointment
+  //     )
+  //   );
+  // };
+
+  const { dToken, appointments, getAppointments, cancelAppointment, completeAppointment } = useContext(DoctorContext)
+  const { slotDateFormat, calculateAge, currency } = useContext(AppContext)
+
+  useEffect(() => {
+    if (dToken) {
+      getAppointments()
+    }
+  }, [dToken])
+
 
   return (
     <Box sx={{ padding: 2 }}>
@@ -94,35 +106,26 @@ const DoctorAppointments = () => {
               <TableCell>Payment</TableCell>
               <TableCell>Age</TableCell>
               <TableCell>Date & Time</TableCell>
-              <TableCell>Doctor</TableCell>
               <TableCell>Fees</TableCell>
               <TableCell>Action</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
             {appointments.map((appointment, index) => (
-              <TableRow key={appointment.id}>
+              <TableRow key={index}>
                 <TableCell>{index + 1}</TableCell>
                 <TableCell>
                   <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-                    <Avatar>
-                      {appointment.patient.charAt(0).toUpperCase()}
+                    <Avatar src={appointment?.userData.image}>
+                      {appointment.userData.name}
                     </Avatar>
-                    {appointment.patient}
+                    {/* {appointment.patient} */}
                   </Box>
                 </TableCell>
-                <TableCell>{appointment.payment}</TableCell>
-                <TableCell>{appointment.age}</TableCell>
-                <TableCell>{appointment.date}</TableCell>
-                <TableCell>
-                  <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-                    <Avatar>
-                      {appointment.doctor.charAt(0).toUpperCase()}
-                    </Avatar>
-                    {appointment.doctor}
-                  </Box>
-                </TableCell>
-                <TableCell>{appointment.fees}</TableCell>
+                <TableCell>{appointment.payment?'Online':'CASH'}</TableCell>
+                <TableCell>{calculateAge(appointment.userData.dob)}</TableCell>
+                <TableCell>{slotDateFormat(appointment.slotDate)}, {appointment.slotTime}</TableCell>
+                <TableCell>{currency}{appointment.amount}</TableCell>
                 <TableCell>
                   {appointment.cancelled ? (
                     <Typography sx={{ color: "red" }}>Cancelled</Typography>
@@ -130,10 +133,10 @@ const DoctorAppointments = () => {
                     <Typography sx={{ color: "green" }}>Completed</Typography>
                   ) : (
                     <>
-                      <IconButton onClick={() => cancelAppointment(item._id)} className="w-10">
+                      <IconButton onClick={() => cancelAppointment(appointment._id)} className="w-10">
                         <CancelIcon  sx={{ color: "red" }}/>
                       </IconButton>
-                      <IconButton onClick={() => completeAppointment(item._id)} className="w-10">
+                      <IconButton onClick={() => completeAppointment(appointment._id)} className="w-10">
                         <CheckIcon sx={{ color: "green" }}/>
                       </IconButton>
                     </>

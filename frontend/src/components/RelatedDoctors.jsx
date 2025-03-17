@@ -1,10 +1,23 @@
-import React from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { Box, Typography, Paper, Avatar, Grid2 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { doctors } from '../assets/assets';
+import { AppContext } from '../context/AppContext';
 
-const RelatedDoctors = () => {
+const RelatedDoctors = ({speciality, docId}) => {
     const navigate = useNavigate()
+
+    const { doctors } = useContext(AppContext)
+
+    const [relDoc, setRelDoc] = useState([])
+
+    useEffect(() => {
+      if (doctors.length > 0 && speciality) {
+          const doctorsData = doctors.filter((doc) => doc.speciality === speciality && doc._id !== docId)
+          setRelDoc(doctorsData)
+      }
+  }, [doctors, speciality, docId])
+
   return (
     <Box display="flex" flexDirection="column" alignItems="center" gap={2} my={8} color="#262626">
       <Typography variant="h4" fontWeight="bold">
@@ -16,7 +29,7 @@ const RelatedDoctors = () => {
 
       {/* Doctor Cards */}
       <Grid2 container spacing={3} justifyContent="center" sx={{ px: { xs: 3, sm: 0 }, mt: 4 }}>
-        {doctors.slice(1,5).map((item, index) => (
+        {relDoc.map((item, index) => (
           <Grid2 key={index} xs={12} sm={6} md={4} lg={3}>
             <Paper
               elevation={3}

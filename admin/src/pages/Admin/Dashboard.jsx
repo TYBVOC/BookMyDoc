@@ -1,29 +1,41 @@
-import React, { useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { Grid, Paper, Typography, Button, IconButton, Avatar } from "@mui/material";
 import CancelIcon from "@mui/icons-material/Cancel";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import DashboardIcon from "@mui/icons-material/Dashboard";
 import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
 import GroupIcon from "@mui/icons-material/Group";
+import { AdminContext } from "../../context/AdminContext";
 
 const AdminDashboard = () => {
-  const [bookings, setBookings] = useState([
-    { id: 1, name: "John Doe", date: "6 Mar 2025", status: "Completed" },
-    { id: 2, name: "Alice Smith", date: "6 Mar 2025", status: "Upcoming" },
-    { id: 3, name: "Michael Brown", date: "3 Mar 2025", status: "Completed" },
-    { id: 4, name: "Emma Wilson", date: "18 Feb 2025", status: "Upcoming" },
-  ]);
+  // const [bookings, setBookings] = useState([
+  //   { id: 1, name: "John Doe", date: "6 Mar 2025", status: "Completed" },
+  //   { id: 2, name: "Alice Smith", date: "6 Mar 2025", status: "Upcoming" },
+  //   { id: 3, name: "Michael Brown", date: "3 Mar 2025", status: "Completed" },
+  //   { id: 4, name: "Emma Wilson", date: "18 Feb 2025", status: "Upcoming" },
+  // ]);
+
+  const { aToken, getDashData, cancelAppointment, dashData } = useContext(AdminContext)
+
+  useEffect(() => {
+    if (aToken) {
+      getDashData()
+    }
+
+    // console.log(dashData?.latestAppointments);
+    
+  }, [aToken])
 
   // Function to cancel a booking
-  const handleCancelBooking = (bookingId) => {
-    setBookings((prev) =>
-      prev.map((booking) =>
-        booking.id === bookingId ? { ...booking, status: "Cancelled" } : booking
-      )
-    );
-  };
+  // const handleCancelBooking = (bookingId) => {
+  //   setBookings((prev) =>
+  //     prev.map((booking) =>
+  //       booking.id === bookingId ? { ...booking, status: "Cancelled" } : booking
+  //     )
+  //   );
+  // };
 
-  return (
+  return dashData && (
     <div style={{ display: "flex", height: "100vh" }}>
       
     
@@ -38,19 +50,19 @@ const AdminDashboard = () => {
           <Grid item xs={4}>
             <Paper sx={{ padding: 2, display: "flex", alignItems: "center", gap: 2 }}>
               <GroupIcon sx={{ fontSize: 40, color: "#1976d2" }} />
-              <Typography variant="h6">1 Doctors</Typography>
+              <Typography variant="h6">{dashData.doctors} Doctors</Typography>
             </Paper>
           </Grid>
           <Grid item xs={4}>
             <Paper sx={{ padding: 2, display: "flex", alignItems: "center", gap: 2 }}>
               <CalendarMonthIcon sx={{ fontSize: 40, color: "#1976d2" }} />
-              <Typography variant="h6">4 Appointments</Typography>
+              <Typography variant="h6">{dashData.appointments} Appointments</Typography>
             </Paper>
           </Grid>
           <Grid item xs={4}>
             <Paper sx={{ padding: 2, display: "flex", alignItems: "center", gap: 2 }}>
               <GroupIcon sx={{ fontSize: 40, color: "#1976d2" }} />
-              <Typography variant="h6">3 Patients</Typography>
+              <Typography variant="h6">{dashData.patients} Patients</Typography>
             </Paper>
           </Grid>
         </Grid>
@@ -60,9 +72,9 @@ const AdminDashboard = () => {
           <Typography variant="h6" fontWeight="bold" sx={{ mb: 2 }}>
             Latest Bookings
           </Typography>
-          {bookings.map((booking) => (
+          {dashData.latestAppointments.map((booking, i) => (
             <div
-              key={booking.id}
+              key={i}
               style={{
                 display: "flex",
                 alignItems: "center",
@@ -72,16 +84,16 @@ const AdminDashboard = () => {
               }}
             >
               <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-                <Avatar sx={{ width: 40, height: 40 }} />
-                <Typography>{booking.name} - {booking.date}</Typography>
+                <Avatar sx={{ width: 40, height: 40 }} src={booking.userData?.image} />
+                <Typography>{booking.userData.name} {booking.slotDate} {booking.slotTime}</Typography>
               </div>
 
-              {booking.status === "Completed" ? (
-                <Typography sx={{ color: "green" }}>Completed</Typography>
-              ) : booking.status === "Cancelled" ? (
+              {booking.cancelled ? (
                 <Typography sx={{ color: "red" }}>Cancelled</Typography>
+              ) : booking.isCompleted ? (
+                <Typography sx={{ color: "green" }}>Completed</Typography>
               ) : (
-                <IconButton color="error" onClick={() => handleCancelBooking(booking.id)}>
+                <IconButton color="error" onClick={() => cancelAppointment(booking._id)}>
                   <CancelIcon />
                 </IconButton>
               )}

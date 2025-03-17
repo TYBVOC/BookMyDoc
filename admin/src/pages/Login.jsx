@@ -1,6 +1,10 @@
 import { Box, Button, styled, TextField, Typography } from "@mui/material";
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { Link } from "react-router-dom";
+import { AdminContext } from "../context/AdminContext";
+import { DoctorContext } from "../context/DoctorContext";
+import axios from "axios";
+import { toast } from "react-toastify";
 
 const FormContainer = styled(Box)(({ theme }) => ({
   display: "flex",
@@ -48,12 +52,37 @@ const StyledSpan = styled("span")({
 const Login = () => {
   const [loginState, setLoginState] = useState("Admin");
 
-  const handleLogin = (e) => {
+  const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
+
+  const {setAToken} = useContext(AdminContext)
+  const {setDToken} = useContext(DoctorContext)
+
+  const backendUrl = import.meta.env.VITE_BACKEND_URL  
+
+
+  const handleLogin = async (e) => {
     e.preventDefault();
     if (loginState === "Admin") {
-      console.log("Admin Login");
+
+      const { data } = await axios.post(backendUrl + '/api/admin/login', { email, password })
+      if (data.success) {
+        setAToken(data.token)
+        localStorage.setItem('aToken', data.token)
+      } else {
+        toast.error(data.message)
+      }
+
     } else if (loginState === "Doctor") {
-      console.log("Doctor Login");
+
+      const { data } = await axios.post(backendUrl + '/api/doctor/login', { email, password })
+      if (data.success) {
+        setDToken(data.token)
+        localStorage.setItem('dToken', data.token)
+      } else {
+        toast.error(data.message)
+      }
+
     }
   };
 
@@ -62,10 +91,10 @@ const Login = () => {
       <Form onSubmit={handleLogin} component="form" >
         <FormTitle variant="h5">{loginState} Login</FormTitle>
         <Box>
-          <InputField label="Email" variant="outlined" />
+          <InputField onChange={(e)=> setEmail(e.target.value)} value={email} label="Email" variant="outlined" />
         </Box>
         <Box paddingTop={"1rem"}>
-          <InputField label="Password" variant="outlined" />
+          <InputField onChange={(e)=> setPassword(e.target.value)} value={password} label="Password" variant="outlined" />
         </Box>
         <FormButton type="submit" variant="contained">Login</FormButton>
         <Typography

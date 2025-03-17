@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { assets } from "../assets/assets";
 import { 
   Grid2, 
@@ -11,18 +11,144 @@ import {
   useMediaQuery
 } from '@mui/material';
 import RelatedDoctors from "../components/RelatedDoctors";
+import { useNavigate, useParams } from "react-router-dom";
+import { AppContext } from "../context/AppContext";
+import { toast } from "react-toastify";
+import axios from "axios";
 
 const Appointment = () => {
-
   const [docInfo, setDocInfo] = useState(false)
-  return (
+  const [docSlots, setDocSlots] = useState([])
+  const [slotIndex, setSlotIndex] = useState(0)
+  const [slotTime, setSlotTime] = useState('')
+
+  const { docId } = useParams()
+  const navigate = useNavigate()
+  const { doctors, currencySymbol, backendUrl, token, getDoctorsData } = useContext(AppContext)
+  const daysOfWeek = ['SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT']
+
+
+  const fetchDocInfo = async () => {
+    const docInfo = doctors.find((doc) => doc._id === docId)
+    setDocInfo(docInfo)
+  }
+
+    const getAvailableSolts = async () => {
+
+      setDocSlots([])
+
+      // getting current date
+      let today = new Date()
+
+      for (let i = 0; i < 7; i++) {
+
+          // getting date with index 
+          let currentDate = new Date(today)
+          currentDate.setDate(today.getDate() + i)
+
+          // setting end time of the date with index
+          let endTime = new Date()
+          endTime.setDate(today.getDate() + i)
+          endTime.setHours(21, 0, 0, 0)
+
+          // setting hours 
+          if (today.getDate() === currentDate.getDate()) {
+              currentDate.setHours(currentDate.getHours() > 10 ? currentDate.getHours() + 1 : 10)
+              currentDate.setMinutes(currentDate.getMinutes() > 30 ? 30 : 0)
+          } else {
+              currentDate.setHours(10)
+              currentDate.setMinutes(0)
+          }
+
+          let timeSlots = [];
+
+
+          while (currentDate < endTime) {
+              let formattedTime = currentDate.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+
+              let day = currentDate.getDate()
+              let month = currentDate.getMonth() + 1
+              let year = currentDate.getFullYear()
+
+              const slotDate = day + "_" + month + "_" + year
+              const slotTime = formattedTime
+
+              const isSlotAvailable = docInfo.slots_booked[slotDate] && docInfo.slots_booked[slotDate].includes(slotTime) ? false : true
+
+              if (isSlotAvailable) {
+
+                  // Add slot to array
+                  timeSlots.push({
+                      datetime: new Date(currentDate),
+                      time: formattedTime
+                  })
+              }
+
+              // Increment current time by 30 minutes
+              currentDate.setMinutes(currentDate.getMinutes() + 30);
+          }
+
+          setDocSlots(prev => ([...prev, timeSlots]))
+
+      }
+
+  }
+
+  const bookAppointment = async () => {
+
+    if (!token) {
+        toast.warning('Login to book appointment')
+        return navigate('/login')
+    }
+
+    const date = docSlots[slotIndex][0].datetime
+
+    let day = date.getDate()
+    let month = date.getMonth() + 1
+    let year = date.getFullYear()
+
+    const slotDate = day + "_" + month + "_" + year
+
+    try {
+
+        const { data } = await axios.post(backendUrl + '/api/user/book-appointment', { docId, slotDate, slotTime }, { headers: { token } })
+        if (data.success) {
+            toast.success(data.message)
+            getDoctorsData()
+            navigate('/my-appointments')
+        } else {
+            toast.error(data.message)
+        }
+
+    } catch (error) {
+        console.log(error)
+        toast.error(error.message)
+    }
+
+  }
+
+  useEffect(() => {
+    if (doctors.length > 0) {
+        fetchDocInfo()
+    }
+  }, [doctors, docId])
+
+  useEffect(() => {
+      if (docInfo) {
+        getAvailableSolts()
+      }
+  }, [docInfo])
+
+
+
+  return docInfo ? (
     <Box sx={{ px: { xs: 2, sm: 4, md: 20 }, py: 4 }}>
     {/* Doctor Details */}
     <Grid2 container spacing={3} alignItems="center">
       <Grid2 item xs={12} sm={4} md={3}>
         <Box
           component="img"
-          src={assets.doc13}
+          src={docInfo.image}
           alt="Doctor"
           sx={{
             width: "100%",
@@ -44,17 +170,17 @@ const Appointment = () => {
         >
           <Box display="flex" alignItems="center" gap={1}>
             <Typography variant="h5" color="text.primary" sx={{fontSize: "3rem"}}>
-              Dr. Marea
+              Dr. {docInfo.name}
             </Typography>
             <Avatar src="/path-to-verified-icon.png" sx={{ width: 20, height: 20 }} />
           </Box>
 
           <Box display="flex" alignItems="center" gap={1} >
             <Typography variant="body1" color="text.secondary" sx={{fontSize: "1.5rem"}}>
-              MBBS - General Physician
+              {docInfo.degree} - {docInfo.speciality}
             </Typography>
             <Button variant="outlined" size="small" sx={{ borderRadius: 16, fontSize: "0.75rem" }}>
-              2 Years
+              {docInfo.experience}
             </Button>
           </Box>
 
@@ -63,12 +189,12 @@ const Appointment = () => {
               About <Avatar src={assets.info_icon} sx={{ width: 15, height: 15 }} />
             </Typography>
             <Typography variant="body2" color="text.secondary" mt={0.5}>
-              Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s.
+              {docInfo.about}
             </Typography>
           </Box>
 
           <Typography variant="body1" color="text.primary" mt={2} sx={{fontWeight: 600}}>
-            Appointment Fee: <Typography sx={{fontWeight: 600}}  component="span">₹722</Typography>
+            Appointment Fee: <Typography sx={{fontWeight: 600}}  component="span">{currencySymbol}{docInfo.fees}</Typography>
           </Typography>
         </Box>
       </Grid2>
@@ -82,58 +208,58 @@ const Appointment = () => {
 
       {/* Date Selection */}
       <Box display="flex" height={100} gap={1} overflow="auto" mt={2}>
-        {["Thu 6", "Fri 7", "Sat 8", "Sun 9", "Mon 10", "Tue 11", "Wed 12"].map((day, index) => (
+        {docSlots.length && docSlots?.map((day, index) => (
           <Paper
             key={index}
+            onClick={() => setSlotIndex(index)}
             sx={{
               p: 2,
               minWidth: 84,
               height: 85,
               borderRadius: 20,
               cursor: "pointer",
-              bgcolor: index === 0 ? "primary.main" : "background.paper",
-              color: index === 0 ? "common.white" : "text.secondary",
-              // border: "1px solid black",
-              borderColor: index === 0 ? "primary.main" : "text.secondary",
+              bgcolor: index === slotIndex ? "primary.main" : "background.paper",
+              color: index === slotIndex ? "common.white" : "text.secondary",
+              borderColor: index === slotIndex ? "primary.main" : "text.secondary",
               textAlign: "center",
             }}
           >
-            <Typography>{day.split(" ")[0]}</Typography>
-            <Typography>{day.split(" ")[1]}</Typography>
+            <Typography>{day[0] && daysOfWeek[day[0].datetime.getDay()]}</Typography>
+            <Typography>{day[0] && day[0].datetime.getDate()}</Typography>
           </Paper>
         ))}
       </Box>
 
       {/* Time Slots */}
       <Box display="flex" gap={1} overflow="auto" mt={2}>
-        {["03:00 pm", "04:00 pm", "04:30 pm", "05:00 pm", "05:30 pm", "06:00 pm"].map(
-          (time, index) => (
+        {docSlots.length > 0 && docSlots[slotIndex].map((time, i) => (
             <Button
-              key={index}
+              key={i}
               variant="outlined"
+              onClick={() => setSlotTime(time.time)}
               sx={{
                 borderRadius: 20,
                 flexShrink: 0,
                 px: 3,
                 py: 0.5,
-                color: index === 0 ? "common.white" : "text.secondary",
-                borderColor: index === 0 ? "primary.main" : "text.secondary",
-                bgcolor: index === 0 ? "#1976D2" : "background.paper",
+                color: time.time === slotTime ? "common.white" : "text.secondary",
+                borderColor: time.time === slotTime ? "primary.main" : "text.secondary",
+                bgcolor: time.time === slotTime ? "#1976D2" : "background.paper",
               }}
             >
-              {time}
+              {time.time}
             </Button>
           )
         )}
       </Box>
 
-      <Button variant="contained" sx={{ borderRadius: 20, px: 5, py: 1.5, mt: 3 }}>
+      <Button onClick={bookAppointment} variant="contained" sx={{ borderRadius: 20, px: 5, py: 1.5, mt: 3 }}>
         Book an Appointment
       </Button>
     </Box>
-    <RelatedDoctors/>
+    <RelatedDoctors speciality={docInfo.speciality} docId={docId}/>
   </Box>
-  );
+  ): null
 };
 
 export default Appointment;
