@@ -21,6 +21,10 @@ app.use("/api/user", userRouter)
 app.use("/api/admin", adminRouter)
 app.use("/api/doctor", doctorRouter)
 
+app.get("test", (req, res)=>{
+    return res.json({success: true})
+})
+
 // Server program
 app.listen(process.env.PORT || 3000, ()=>{
     console.log("Backend Server is Listening....."+ process.env.PORT);
