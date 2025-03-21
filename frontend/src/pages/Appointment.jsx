@@ -33,7 +33,7 @@ const Appointment = () => {
     setDocInfo(docInfo)
   }
 
-    const getAvailableSolts = async () => {
+  const getAvailableSolts = async () => {
 
       setDocSlots([])
 
@@ -65,7 +65,7 @@ const Appointment = () => {
 
           while (currentDate < endTime) {
               let formattedTime = currentDate.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-
+            
               let day = currentDate.getDate()
               let month = currentDate.getMonth() + 1
               let year = currentDate.getFullYear()
@@ -107,7 +107,7 @@ const Appointment = () => {
     let month = date.getMonth() + 1
     let year = date.getFullYear()
 
-    const slotDate = day + "_" + month + "_" + year
+    const slotDate = day + " " + month + " " + year
 
     try {
 
