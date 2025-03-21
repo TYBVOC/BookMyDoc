@@ -16,14 +16,14 @@ connectCloudinary()
 
 
 
+app.get("/", (req, res)=>{
+    return res.json({success: true})
+})
 // Api endpoints here
 app.use("/api/user", userRouter)
 app.use("/api/admin", adminRouter)
 app.use("/api/doctor", doctorRouter)
 
-app.get("test", (req, res)=>{
-    return res.json({success: true})
-})
 
 // Server program
 app.listen(process.env.PORT || 3000, ()=>{
