@@ -40,7 +40,6 @@ export const assets = {
     upload_icon,
     stripe_logo,
     razorpay_logo,
-    doc13,
     bookMyDoc
 }
 
