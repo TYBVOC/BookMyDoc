@@ -7,9 +7,13 @@ import {connectCloudinary} from "./config/cloudinary.js"
 import adminRouter from "./routes/adminRoute.js";
 import doctorRouter from "./routes/doctorRoute.js";
 
+const corsOptions = {
+    origin: ["https://bookmydoc-backend-w6j3.onrender.com"],
+};
+
 const app = express()
 app.use(express.json())
-app.use(cors())
+app.use(cors(corsOptions))
 
 connectDB()
 connectCloudinary()
