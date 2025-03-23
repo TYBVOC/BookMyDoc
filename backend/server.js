@@ -8,7 +8,7 @@ import adminRouter from "./routes/adminRoute.js";
 import doctorRouter from "./routes/doctorRoute.js";
 
 const corsOptions = {
-    origin: ["https://bookmydoc-backend-w6j3.onrender.com"],
+    origin: ["https://book-my-doc-admin.vercel.app"],
 };
 
 const app = express()
