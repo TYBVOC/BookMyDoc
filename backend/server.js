@@ -8,7 +8,7 @@ import adminRouter from "./routes/adminRoute.js";
 import doctorRouter from "./routes/doctorRoute.js";
 
 const corsOptions = {
-    origin: ["https://book-my-doc-admin.vercel.app"],
+    origin: ["https://book-my-doc-admin.vercel.app", "https://book-my-doc-omega.vercel.app"],
 };
 
 const app = express()
